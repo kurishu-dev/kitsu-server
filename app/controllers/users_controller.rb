@@ -16,8 +16,13 @@ class UsersController < ApplicationController
   rescue Action::ValidationError
     render_jsonapi_error(400, 'No email provided')
   end
-
+  # Used newer Ruby
   def confirm
+    # Run the Turnstile verification check
+    unless valid_captcha?(params[:captcha_token])
+      return render_jsonapi_error(400, 'Bot verification failed. Please try again from the website.')
+    end
+
     token = Doorkeeper::AccessToken.by_token(params[:token])
     return render_jsonapi_error(403, 'Not Authorized') unless token&.acceptable?(:email_confirm)
     token.resource_owner.update(confirmed_at: Time.now)
