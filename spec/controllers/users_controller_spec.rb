@@ -140,5 +140,5 @@ RSpec.describe UsersController, type: :controller do
         expect(user.reload.confirmed_at).not_to be_nil
       end
     end
-  end
+  end/workspaces/kitsu-server/spec/controllers/users_controller_spec.rb
 end

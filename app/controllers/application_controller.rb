@@ -13,7 +13,7 @@ class ApplicationController < JSONAPI::ResourceController
   around_action :flush_buffered_feeds
 
   def base_url
-    super + '/api/edge'
+    "#{super}/api/edge"
   end
 
   # TODO: get rid of this dumb hack for pundit-resources
@@ -75,7 +75,7 @@ class ApplicationController < JSONAPI::ResourceController
 
   # Verifies the Cloudflare Turnstile token sent from the frontend client
   def valid_captcha?(captcha_token)
-    secret_key = ENV['TURNSTILE_SECRET_KEY']
+    secret_key = ENV.fetch('TURNSTILE_SECRET_KEY', nil)
     return true if (secret_key.nil? || secret_key.strip.empty?) && !Rails.env.production?
     return false if captcha_token.nil? || captcha_token.strip.empty?
 
